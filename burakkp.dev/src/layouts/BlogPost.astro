@@ -1,0 +1,8 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import SiteLayout from './SiteLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+type Props = CollectionEntry<'blog'>['data'];
+const { title, description, pubDate, updatedDate, topic } = Astro.props;
+---
+<SiteLayout title={`${title} | burakkp.dev`} description={description} article><div class="reading"><header class="page-heading"><a class="eyebrow" href="/blog/">Engineering notebook / {topic}</a><h1>{title}</h1><p class="intro">{description}</p><p class="post-meta"><FormattedDate date={pubDate} />{updatedDate && <span>Updated <FormattedDate date={updatedDate} /></span>}</p></header><article class="prose lg:prose-xl prose-blue dark:prose-invert max-w-none"><slot /></article><div class="article-end"><a href="/blog/">Browse all writing</a><a href="/rss.xml">Subscribe via RSS</a></div></div></SiteLayout>

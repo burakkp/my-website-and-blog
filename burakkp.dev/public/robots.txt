@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://burakkp.dev/sitemap-index.xml

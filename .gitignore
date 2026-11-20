@@ -1,0 +1,12 @@
+# Dependencies and build output (each site is an independent npm project)
+node_modules/
+dist/
+.astro/
+
+# Local environment and logs
+.env*
+!.env.example
+*.log
+.DS_Store
+.idea/
+.wrangler/

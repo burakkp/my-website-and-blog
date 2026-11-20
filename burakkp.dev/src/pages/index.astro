@@ -1,0 +1,9 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PostList from '../components/PostList.astro';
+---
+<SiteLayout>
+  <section class="hero"><p class="eyebrow">Burak’s engineering notebook</p><h1>Build. Understand.<br /><span>Write it down.</span></h1><p class="intro">Notes on cloud infrastructure, small programs, and making things that work. From the terminal to the workbench.</p><ul class="topics" aria-label="Topics"><li>Go</li><li>Cloudflare Workers</li><li>Linux</li><li>OpenSCAD</li></ul></section>
+  <section aria-labelledby="writing"><div class="section-heading"><h2 id="writing">From the notebook</h2><a href="/blog/">All writing</a></div><PostList /></section>
+  <aside class="note">This is the new home for my technical writing. The articles here are starter content while the archive is prepared.</aside>
+</SiteLayout>
