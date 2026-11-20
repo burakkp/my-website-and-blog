@@ -54,9 +54,9 @@ Each project has `title`, `order`, `category`, `summary`, `mark`, and `tone` fro
 
 ## Deploy
 
-This site lives in the `burakkp.com/` folder of the GitHub repository `burakkp/my-website-and-blog`. It deploys as its own Cloudflare Pages project with root directory `burakkp.com`.
+This site lives in the `burakkp.com/` folder of the GitHub repository `burakkp/my-website-and-blog`. It deploys as its own Cloudflare Worker (`burakkp-com`) with root directory `burakkp.com`, configured by `wrangler.jsonc`.
 
-Full build settings, custom domain steps, checks and rollback are in [../docs/cloudflare-pages.md](../docs/cloudflare-pages.md).
+Full build settings, custom domain steps, checks and rollback are in [../docs/cloudflare-deploy.md](../docs/cloudflare-deploy.md).
 
 ## Dependency maintenance
 
@@ -72,4 +72,4 @@ cd burakkp.com
 npm install tailwindcss @tailwindcss/vite @tailwindcss/typography @astrojs/check typescript @astrojs/mdx @astrojs/sitemap
 ```
 
-References: [Astro installation](https://docs.astro.build/en/install-and-setup/), [Cloudflare Pages Astro deployment](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/), [parser advisory](https://github.com/advisories/GHSA-rj75-hqrm-r3gf).
+References: [Astro installation](https://docs.astro.build/en/install-and-setup/), [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/), [parser advisory](https://github.com/advisories/GHSA-rj75-hqrm-r3gf).

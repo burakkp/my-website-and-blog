@@ -67,9 +67,9 @@ Before replacing Hashnode, export the original URL inventory and article content
 
 ## Deploy
 
-This site lives in the `burakkp.dev/` folder of the GitHub repository `burakkp/my-website-and-blog`. It deploys as its own Cloudflare Pages project with root directory `burakkp.dev`.
+This site lives in the `burakkp.dev/` folder of the GitHub repository `burakkp/my-website-and-blog`. It deploys as its own Cloudflare Worker (`burakkp-dev`) with root directory `burakkp.dev`, configured by `wrangler.jsonc`.
 
-Full build settings, custom domain steps, checks and rollback are in [../docs/cloudflare-pages.md](../docs/cloudflare-pages.md).
+Full build settings, custom domain steps, checks and rollback are in [../docs/cloudflare-deploy.md](../docs/cloudflare-deploy.md).
 
 ## Dependency maintenance
 
@@ -85,4 +85,4 @@ cd burakkp.dev
 npm install tailwindcss @tailwindcss/vite @tailwindcss/typography @astrojs/check typescript
 ```
 
-References: [Astro installation](https://docs.astro.build/en/install-and-setup/), [Cloudflare Pages Astro deployment](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/), [parser advisory](https://github.com/advisories/GHSA-rj75-hqrm-r3gf).
+References: [Astro installation](https://docs.astro.build/en/install-and-setup/), [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/), [parser advisory](https://github.com/advisories/GHSA-rj75-hqrm-r3gf).

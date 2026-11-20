@@ -1,6 +1,6 @@
 # my-website-and-blog
 
-Source for two static Astro sites, each deployed as its own Cloudflare Pages project from this repository.
+Source for two static Astro sites, each deployed as its own Cloudflare Worker (static assets) from this repository.
 
 | Folder | Site | Purpose |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ npm --prefix burakkp.com run dev -- --port 4322
 
 ## Deploy
 
-Deployment setup for Cloudflare Pages is in [docs/cloudflare-pages.md](docs/cloudflare-pages.md).
+Cloudflare deployment setup is in [docs/cloudflare-deploy.md](docs/cloudflare-deploy.md).
 
 Other docs:
 
