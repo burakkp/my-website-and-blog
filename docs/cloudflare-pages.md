@@ -2,19 +2,14 @@
 
 Both sites deploy from the GitHub repository `burakkp/my-website-and-blog` as **two separate Pages projects**. Each project builds only its own folder, set through the root directory.
 
-## Values to fill in
-
-These come from your Cloudflare account. Fill them in before connecting.
+## Decisions
 
 | Item | Value |
 | --- | --- |
-| Cloudflare account | _TBD_ |
-| Pages project name for the blog | _TBD_ (suggested: `burakkp-dev`) |
-| Pages project name for the portfolio | _TBD_ (suggested: `burakkp-com`) |
-| Is `burakkp.dev` a zone in this account? | _TBD_ |
-| Is `burakkp.com` a zone in this account? | _TBD_ |
-| Use `www.` subdomains too? | _TBD_ |
-| Current DNS records to replace (record them before switching) | _TBD_ |
+| Pages project for the blog | `burakkp-dev` (preview at `burakkp-dev.pages.dev`) |
+| Pages project for the portfolio | `burakkp-com` (preview at `burakkp-com.pages.dev`) |
+| DNS | Both domains are zones in the same Cloudflare account. DNS is already configured. |
+| Hostnames | Apex domains only. No `www`. |
 
 ## Build settings
 
@@ -50,12 +45,13 @@ These live in each site's `public/` folder and are copied into `dist/` at build 
 
 Do this only after the `*.pages.dev` deployment looks right.
 
-1. In each Pages project, open **Custom domains → Set up a custom domain**.
-2. Add `burakkp.dev` to the blog project and `burakkp.com` to the portfolio project.
-3. If the domain is a zone in the same Cloudflare account, Cloudflare creates the DNS record for you. Otherwise, add the CNAME it shows at your DNS provider.
-4. For a `www.` host, add it as a second custom domain. Then add a Bulk Redirect or Redirect Rule from `www` to the apex domain.
+1. In the `burakkp-dev` project, open **Custom domains → Set up a custom domain** and enter `burakkp.dev`.
+2. In the `burakkp-com` project, do the same with `burakkp.com`.
+3. Both zones are in this account, so Cloudflare creates or updates the DNS record itself. No manual DNS change is needed.
 
-Both sites set their canonical URL to the apex domain in `astro.config.mjs`. Change the `site` value there if you choose `www` as primary.
+Both domains are live today. If a domain's apex already points somewhere else, Cloudflare asks to replace that record when you add the custom domain. That moment is the switch to the new site, so do it only when you are ready.
+
+Both sites set their canonical URL to the apex domain in `astro.config.mjs`.
 
 ## Verify after deploy
 
