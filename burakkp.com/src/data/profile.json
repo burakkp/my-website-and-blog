@@ -1,0 +1,16 @@
+{
+  "greeting": "Hello, I’m Burak.",
+  "intro": "Building across the digital and physical. SaaS projects, cloud architecture, and experiments from the 3D printing workbench.",
+  "interests": ["Cloud architecture", "Software & SaaS", "Linux & Go", "3D printing & OpenSCAD"],
+  "terminalNote": "Ideas become code. Parameters become objects.",
+  "links": {
+    "github": "https://github.com/burakkp",
+    "linkedin": "",
+    "email": ""
+  },
+  "github": {
+    "username": "burakkp",
+    "topic": "portfolio",
+    "limit": 6
+  }
+}

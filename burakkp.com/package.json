@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "import:linkedin": "node scripts/import-linkedin.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",

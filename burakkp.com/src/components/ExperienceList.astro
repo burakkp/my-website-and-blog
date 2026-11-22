@@ -1,0 +1,6 @@
+---
+import { render } from 'astro:content';
+import { getExperience } from '../lib/experience';
+const items = await Promise.all((await getExperience()).map(async ({ entry, period }) => ({ ...entry.data, period, Content: (await render(entry)).Content })));
+---
+<ol class="experience-list">{items.map(({ role, company, location, period, Content }) => <li><p class="experience-period">{period}</p><div><h3>{role}</h3><p class="experience-org">{company}{location && <span> · {location}</span>}</p><div class="experience-body"><Content /></div></div></li>)}</ol>

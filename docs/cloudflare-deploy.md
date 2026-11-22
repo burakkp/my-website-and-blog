@@ -31,7 +31,7 @@ Create each project under **Workers & Pages → Create → Import a repository**
 
 Build watch paths stop a commit that only touches one site from rebuilding the other. Add them after the first deployment succeeds.
 
-No secrets, bindings or server adapter are needed.
+No bindings or server adapter are needed. The portfolio optionally takes a `GITHUB_TOKEN` build variable, described in [editing-content.md](editing-content.md).
 
 ## Files Cloudflare reads from each site
 

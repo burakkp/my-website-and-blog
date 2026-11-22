@@ -27,5 +27,6 @@ Cloudflare deployment setup is in [docs/cloudflare-deploy.md](docs/cloudflare-de
 
 Other docs:
 
+- [docs/editing-content.md](docs/editing-content.md): web dashboards at `/admin/`, LinkedIn import, GitHub section.
 - [docs/implementation-plan.md](docs/implementation-plan.md): what was built and how it was verified.
 - [agent_build_instructions.md](agent_build_instructions.md): the original project specification.

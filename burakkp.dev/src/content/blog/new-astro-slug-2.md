@@ -9,9 +9,9 @@ topic: "Workbench"
 
 ## Keep the example small
 
-This page is written in MDX. It supports Markdown and static components in the same article, without requiring browser JavaScript.
+This page is plain Markdown, the format the dashboard writes.
 
-<aside className="note">A useful constraint: make the example small enough to read in one sitting.</aside>
+> A useful constraint: make the example small enough to read in one sitting.
 
 ## Write down the parameters
 

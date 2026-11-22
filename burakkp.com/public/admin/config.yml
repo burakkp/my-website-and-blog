@@ -1,0 +1,91 @@
+# Dashboard for burakkp.com: https://burakkp.com/admin/
+# Every save is a Git commit to main, which redeploys the site in about a minute.
+# Paths are relative to the repository root, because both sites share one repo.
+
+backend:
+  name: github
+  repo: burakkp/my-website-and-blog
+  branch: main
+  commit_messages:
+    create: "Portfolio: add {{collection}} {{slug}}"
+    update: "Portfolio: update {{collection}} {{slug}}"
+    delete: "Portfolio: delete {{collection}} {{slug}}"
+    uploadMedia: "Portfolio: upload {{path}}"
+    deleteMedia: "Portfolio: delete {{path}}"
+
+site_url: https://burakkp.com
+display_url: https://burakkp.com
+media_folder: burakkp.com/public/images
+public_folder: /images
+
+collections:
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: burakkp.com/src/content/projects
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{order}}. {{title}}"
+    sortable_fields: [order, title]
+    preview_path: "projects/{{slug}}/"
+    fields:
+      - { name: title, label: Name, widget: string }
+      - { name: order, label: Position on the page, widget: number, value_type: int, min: 1, hint: "1 is shown first." }
+      - { name: category, label: Category, widget: string, default: "Software project" }
+      - { name: summary, label: Card summary, widget: text, hint: "One or two sentences on the project card." }
+      - { name: mark, label: Card mark, widget: string, hint: "Two or three characters drawn large on the card, such as BR or >_." }
+      - { name: tone, label: Card colour, widget: select, options: [lime, blue, orange, violet], default: lime }
+      - { name: website, label: Website URL, widget: string, required: false, pattern: ['^https?://', 'Start with https://'] }
+      - { name: repo, label: Source code URL, widget: string, required: false, pattern: ['^https?://', 'Start with https://'] }
+      - { name: body, label: Project write-up, widget: markdown }
+
+  - name: experience
+    label: Experience
+    label_singular: Position
+    folder: burakkp.com/src/content/experience
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    identifier_field: role
+    slug: "{{company}}-{{role}}-{{start}}"
+    summary: "{{role}} · {{company}} · {{start}}"
+    sortable_fields: [start, company]
+    fields:
+      - { name: role, label: Role, widget: string }
+      - { name: company, label: Company, widget: string }
+      - { name: location, label: Location, widget: string, required: false }
+      - { name: start, label: Start month, widget: string, pattern: ['^\d{4}-(0[1-9]|1[0-2])$', 'Use YYYY-MM, for example 2022-03'] }
+      - { name: end, label: End month, widget: string, required: false, hint: "Leave empty for your current role.", pattern: ['^(\d{4}-(0[1-9]|1[0-2]))?$', 'Use YYYY-MM, or leave empty'] }
+      - { name: body, label: What you did, widget: markdown, required: false }
+
+  - name: settings
+    label: Site settings
+    files:
+      - name: profile
+        label: Profile, homepage text and links
+        file: burakkp.com/src/data/profile.json
+        format: json
+        fields:
+          - { name: greeting, label: Greeting, widget: string }
+          - { name: intro, label: Homepage introduction, widget: text }
+          - { name: interests, label: Terminal interests, widget: list, field: { name: item, label: Interest, widget: string } }
+          - { name: terminalNote, label: Terminal note, widget: string }
+          - name: links
+            label: Links
+            widget: object
+            fields:
+              - { name: github, label: GitHub URL, widget: string, required: false }
+              - { name: linkedin, label: LinkedIn URL, widget: string, required: false }
+              - { name: email, label: Email, widget: string, required: false }
+          - name: github
+            label: GitHub repositories section
+            widget: object
+            hint: "Shows your public repositories that have this GitHub topic. Refreshes on every deploy."
+            fields:
+              - { name: username, label: GitHub username, widget: string }
+              - { name: topic, label: Topic to show, widget: string, default: portfolio }
+              - { name: limit, label: Maximum repositories, widget: number, value_type: int, min: 1, max: 12, default: 6 }

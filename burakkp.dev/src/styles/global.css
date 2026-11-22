@@ -33,7 +33,6 @@ h2 { font-size: 1.5rem; }
 .post-list h3 { font-size: 1.55rem; margin-bottom: .7rem; }
 .post-list h3 a { text-decoration: none; }
 .post-list p { color: var(--muted); margin-bottom: .65rem; }
-.sample-label { color: var(--muted); font-size: .8rem; }
 .note { background: var(--panel); border-left: 2px solid var(--accent); padding: 1.25rem 1.5rem; margin: 3rem 0; color: var(--muted); }
 .site-footer { border-top: 1px solid var(--line); padding: 2rem 0; margin-top: 5rem; color: var(--muted); }
 .page-heading { padding: 4rem 0 3rem; }

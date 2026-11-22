@@ -1,0 +1,41 @@
+# Dashboard for burakkp.dev: https://burakkp.dev/admin/
+# Every save is a Git commit to main, which redeploys the site in about a minute.
+# Paths are relative to the repository root, because both sites share one repo.
+
+backend:
+  name: github
+  repo: burakkp/my-website-and-blog
+  branch: main
+  commit_messages:
+    create: "Blog: add {{slug}}"
+    update: "Blog: update {{slug}}"
+    delete: "Blog: delete {{slug}}"
+    uploadMedia: "Blog: upload {{path}}"
+    deleteMedia: "Blog: delete {{path}}"
+
+site_url: https://burakkp.dev
+display_url: https://burakkp.dev
+media_folder: burakkp.dev/public/images/blog
+public_folder: /images/blog
+
+collections:
+  - name: blog
+    label: Blog posts
+    label_singular: Blog post
+    folder: burakkp.dev/src/content/blog
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{title}} · {{pubDate}}{{draft | ternary(' · DRAFT', '')}}"
+    sortable_fields: [pubDate, title]
+    preview_path: "blog/{{slug}}/"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: description, label: Summary, widget: text, hint: "One or two sentences. Shown in the post list, RSS and search results." }
+      - { name: pubDate, label: Published, widget: datetime, time_format: false, format: YYYY-MM-DD, default: "{{now}}" }
+      - { name: updatedDate, label: Updated, widget: datetime, time_format: false, format: YYYY-MM-DD, required: false }
+      - { name: topic, label: Topic, widget: string, hint: "For example Go, Cloudflare Workers, Linux, OpenSCAD." }
+      - { name: draft, label: Draft, widget: boolean, default: false, hint: "Drafts are saved but not published." }
+      - { name: body, label: Article, widget: markdown }
