@@ -9,7 +9,7 @@
 // LinkedIn is the source of truth: the experience folder is made to match it exactly.
 // Safety: if LinkedIn returns no data or no positions, nothing is changed.
 
-import { EXPERIENCE_DIR, writePositions } from './lib/positions.mjs';
+import { EXPERIENCE_DIR, renderPosition, writePositions } from './lib/positions.mjs';
 
 const token = process.env.LINKEDIN_TOKEN?.trim();
 const dryRun = process.argv.includes('--dry-run');
@@ -53,6 +53,11 @@ try {
 	const positions = await fetchDomain('POSITIONS');
 	if (positions === null) notice('notice', 'LinkedIn has no snapshot for POSITIONS yet (HTTP 404). Nothing changed. This is normal for the first days after consent.');
 	else if (positions.length === 0) notice('warning', 'LinkedIn returned zero positions. Nothing changed, to avoid wiping the Experience section by mistake.');
+	else if (!positions.some(p => renderPosition(p))) {
+		// Field names differ from what we expect: never mirror an empty result over real entries.
+		notice('error', `None of the ${positions.length} LinkedIn position(s) had a usable title, company and start date. Nothing changed. Fields received: ${Object.keys(positions[0] ?? {}).join(', ')}`);
+		process.exit(1);
+	}
 	else if (dryRun) console.log(`Dry run: LinkedIn returned ${positions.length} position(s). Fields: ${Object.keys(positions[0]).join(', ')}`);
 	else {
 		const s = writePositions(positions, 'mirror');
