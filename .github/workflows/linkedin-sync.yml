@@ -1,0 +1,48 @@
+# Daily: copy job positions from LinkedIn into burakkp.com's Experience section.
+# A change is committed to main, which triggers the normal Cloudflare deploy.
+# Secrets (set by `npm run linkedin:token` in burakkp.com): LINKEDIN_TOKEN, LINKEDIN_TOKEN_EXPIRES.
+name: LinkedIn sync
+
+on:
+  schedule:
+    - cron: "17 5 * * *" # 05:17 UTC every day
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: linkedin-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: burakkp.com/.nvmrc
+
+      - name: Fetch positions from LinkedIn
+        working-directory: burakkp.com
+        env:
+          LINKEDIN_TOKEN: ${{ secrets.LINKEDIN_TOKEN }}
+          LINKEDIN_TOKEN_EXPIRES: ${{ secrets.LINKEDIN_TOKEN_EXPIRES }}
+        run: node scripts/sync-linkedin.mjs
+
+      # Runs even when the sync step failed only because the token is near expiry.
+      - name: Commit changes
+        if: ${{ !cancelled() }}
+        run: |
+          git add burakkp.com/src/content/experience
+          if git diff --cached --quiet; then
+            echo "No changes from LinkedIn."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sync experience from LinkedIn"
+          git push

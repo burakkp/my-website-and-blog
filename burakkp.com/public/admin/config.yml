@@ -43,13 +43,14 @@ collections:
       - { name: body, label: Project write-up, widget: markdown }
 
   - name: experience
-    label: Experience
+    label: Experience (synced from LinkedIn)
     label_singular: Position
+    description: "Synced daily from your LinkedIn profile. Change jobs on LinkedIn: edits made here are overwritten by the next sync."
     folder: burakkp.com/src/content/experience
     extension: md
     format: frontmatter
-    create: true
-    delete: true
+    create: false
+    delete: false
     identifier_field: role
     slug: "{{company}}-{{role}}-{{start}}"
     summary: "{{role}} · {{company}} · {{start}}"

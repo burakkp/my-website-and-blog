@@ -12,7 +12,8 @@
     "astro": "astro",
     "check": "astro check",
     "import:linkedin": "node scripts/import-linkedin.mjs",
-    "linkedin:token": "node scripts/linkedin-token.mjs"
+    "linkedin:token": "node scripts/linkedin-token.mjs",
+    "sync:linkedin": "node scripts/sync-linkedin.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",

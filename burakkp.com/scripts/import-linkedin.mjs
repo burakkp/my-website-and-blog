@@ -7,8 +7,9 @@
 //
 // Existing entries are kept so dashboard edits are never lost. Pass --overwrite to replace them.
 
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { EXPERIENCE_DIR, writePositions } from './lib/positions.mjs';
 
 const args = process.argv.slice(2);
 const overwrite = args.includes('--overwrite');
@@ -45,47 +46,10 @@ function parseCsv(text) {
 	return rows.filter(r => r.some(v => v.trim()));
 }
 
-const MONTHS = { jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06', jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12' };
-/** "Mar 2021" → "2021-03", "2021" → "2021-01", "" → "". */
-function toMonth(value) {
-	const v = value.trim();
-	if (!v) return '';
-	let m = v.match(/^([A-Za-z]{3})[a-z]*\.?\s+(\d{4})$/);
-	if (m && MONTHS[m[1].toLowerCase()]) return `${m[2]}-${MONTHS[m[1].toLowerCase()]}`;
-	m = v.match(/^(\d{4})$/);
-	if (m) return `${m[1]}-01`;
-	m = v.match(/^(\d{4})-(\d{2})/);
-	if (m) return `${m[1]}-${m[2]}`;
-	throw new Error(`Unrecognised date "${value}"`);
-}
+const [header, ...rows] = parseCsv(readFileSync(csvPath, 'utf8').replace(/^\uFEFF/, ''));
+const records = rows.map(r => Object.fromEntries(header.map((h, i) => [h.trim(), r[i] ?? ''])));
+const missing = ['Company Name', 'Title', 'Started On'].filter(h => !header.some(x => x.trim() === h));
+if (missing.length) { console.error(`Columns missing: ${missing.join(', ')}. Found: ${header.join(', ')}`); process.exit(1); }
 
-const slugify = s => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const yaml = s => JSON.stringify(s); // JSON strings are valid YAML scalars
-
-const [header, ...rows] = parseCsv(readFileSync(csvPath, 'utf8').replace(/^﻿/, ''));
-const col = name => {
-	const i = header.findIndex(h => h.trim().toLowerCase() === name.toLowerCase());
-	if (i < 0) throw new Error(`Column "${name}" missing. Found: ${header.join(', ')}`);
-	return i;
-};
-const idx = { company: col('Company Name'), title: col('Title'), description: col('Description'), location: col('Location'), start: col('Started On'), end: col('Finished On') };
-
-const outDir = resolve(import.meta.dirname, '../src/content/experience');
-mkdirSync(outDir, { recursive: true });
-let written = 0, skipped = 0;
-for (const r of rows) {
-	const get = k => (r[idx[k]] ?? '').trim();
-	const start = toMonth(get('start'));
-	if (!get('title') || !get('company') || !start) { console.warn(`Skipping incomplete row: ${r.join(' | ')}`); continue; }
-	const file = join(outDir, `${slugify(`${get('company')}-${get('title')}-${start}`)}.md`);
-	if (existsSync(file) && !overwrite) { skipped++; continue; }
-	const end = toMonth(get('end'));
-	const lines = ['---', `role: ${yaml(get('title'))}`, `company: ${yaml(get('company'))}`];
-	if (get('location')) lines.push(`location: ${yaml(get('location'))}`);
-	lines.push(`start: ${yaml(start)}`);
-	if (end) lines.push(`end: ${yaml(end)}`);
-	lines.push('---', '', get('description'), '');
-	writeFileSync(file, lines.join('\n'));
-	written++;
-}
-console.log(`Experience: ${written} written, ${skipped} kept (already present) in ${outDir}`);
+const stats = writePositions(records, overwrite ? 'overwrite' : 'add');
+console.log(`Experience: ${stats.written} written, ${stats.kept} kept (already present), ${stats.unchanged} unchanged, ${stats.skipped} skipped (incomplete) in ${EXPERIENCE_DIR}`);

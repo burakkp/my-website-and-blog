@@ -39,18 +39,29 @@ Each project has a card on the homepage and its own page. Use **Position on the 
 
 ## Experience from LinkedIn
 
-LinkedIn does not offer an API for reading your own profile, so the import uses LinkedIn's official data export.
+Your job positions sync from LinkedIn every day through LinkedIn's Member Data Portability API, which is available to members in the EU, EEA and Switzerland. Change a job on LinkedIn, and the portfolio updates after the next daily run, at about 05:17 UTC. To sync right away, open the repository on GitHub, go to **Actions → LinkedIn sync → Run workflow**.
 
-1. LinkedIn → **Settings & Privacy → Data privacy → Get a copy of your data**. Choose **Positions**, or the full archive, and request it. LinkedIn emails a link, usually within minutes.
-2. Unzip the download.
-3. From the `burakkp.com` folder, run:
+LinkedIn is the source of truth for Experience. The dashboard shows these entries, but edits there are overwritten by the next sync, and creating or deleting entries is turned off.
 
-   ```bash
-   npm run import:linkedin -- ~/Downloads/linkedin-export
-   git add src/content/experience && git commit -m "Import experience from LinkedIn" && git push
-   ```
+LinkedIn serves a periodic snapshot of your data, so an edit on LinkedIn can take a while to reach the API. If LinkedIn returns no data, the sync changes nothing, so the section is never wiped by mistake.
 
-The import writes one entry per job. After that, edit them in the dashboard under **Experience**. Running the import again only adds new jobs and never overwrites your edits, unless you add `--overwrite`. The Experience section stays hidden while it has no entries.
+### Renewing the LinkedIn token
+
+The token lasts one year and LinkedIn issues no refresh token. Two weeks before it expires, the daily run starts failing, and GitHub emails you. To renew:
+
+```bash
+cd burakkp.com
+source ~/.nvm/nvm.sh && nvm use 22.23.5
+read -r  LINKEDIN_CLIENT_ID     && export LINKEDIN_CLIENT_ID      # paste the Client ID from the LinkedIn app's Auth tab
+read -rs LINKEDIN_CLIENT_SECRET && export LINKEDIN_CLIENT_SECRET  # paste the Primary Client Secret (hidden)
+npm run linkedin:token
+```
+
+The script opens LinkedIn's consent page, then saves the new token and its expiry date as GitHub secrets. The LinkedIn app's **Auth** tab must list `http://localhost:8765/callback` as an authorized redirect URL.
+
+### One-off import from a LinkedIn export
+
+Without API access, you can import LinkedIn's data export instead. Go to **Settings & Privacy → Data privacy → Get a copy of your data**, unzip the download, and run `npm run import:linkedin -- <folder>`. If the daily sync is on, it replaces whatever the import wrote.
 
 ## GitHub repositories
 
