@@ -25,6 +25,19 @@ export function toMonth(value = '') {
 const slugify = s => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const yaml = s => JSON.stringify(s); // JSON strings are valid YAML scalars
 
+/** LinkedIn descriptions are plain text: escape Markdown syntax and keep each line as its own paragraph. */
+export function plainToMarkdown(text = '') {
+	return String(text)
+		.split(/\r?\n/)
+		.map(line => line.trim())
+		.filter(Boolean)
+		.map(line => line
+			.replace(/[\\`*_[\]<>|]/g, '\\$&')
+			.replace(/^(#{1,6}\s|[-+]\s)/, '\\$1')
+			.replace(/^(\d+)([.)]\s)/, '$1\\$2'))
+		.join('\n\n');
+}
+
 /** Turn a LinkedIn position record into { file, content }, or null if it lacks title/company/start. */
 export function renderPosition(record) {
 	const get = key => String(record[key] ?? '').trim();
@@ -35,7 +48,7 @@ export function renderPosition(record) {
 	if (get('Location')) lines.push(`location: ${yaml(get('Location'))}`);
 	lines.push(`start: ${yaml(start)}`);
 	if (end) lines.push(`end: ${yaml(end)}`);
-	lines.push('---', '', get('Description'), '');
+	lines.push('---', '', plainToMarkdown(get('Description')), '');
 	return { file: `${slugify(`${get('Company Name')}-${get('Title')}-${start}`)}.md`, content: lines.join('\n') };
 }
 
