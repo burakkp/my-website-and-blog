@@ -58,7 +58,13 @@ try {
 		notice('error', `None of the ${positions.length} LinkedIn position(s) had a usable title, company and start date. Nothing changed. Fields received: ${Object.keys(positions[0] ?? {}).join(', ')}`);
 		process.exit(1);
 	}
-	else if (dryRun) console.log(`Dry run: LinkedIn returned ${positions.length} position(s). Fields: ${Object.keys(positions[0]).join(', ')}`);
+	else if (dryRun) {
+		// Field names and how many positions fill each one in. Values are never printed.
+		const filled = {};
+		for (const p of positions) for (const [k, v] of Object.entries(p)) filled[k] = (filled[k] ?? 0) + (String(v ?? '').trim() ? 1 : 0);
+		console.log(`Dry run: LinkedIn returned ${positions.length} position(s). Fields (filled in / total):`);
+		for (const [k, n] of Object.entries(filled)) console.log(`  ${k}: ${n}/${positions.length}`);
+	}
 	else {
 		const s = writePositions(positions, 'mirror');
 		console.log(`Experience synced from LinkedIn: ${positions.length} position(s); ${s.written} written, ${s.unchanged} unchanged, ${s.removed} removed, ${s.skipped} skipped (incomplete) in ${EXPERIENCE_DIR}`);
