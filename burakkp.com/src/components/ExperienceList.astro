@@ -1,6 +1,44 @@
 ---
 import { render } from 'astro:content';
-import { getExperience } from '../lib/experience';
-const items = await Promise.all((await getExperience()).map(async ({ entry, period }) => ({ ...entry.data, period, Content: (await render(entry)).Content })));
+import { getExperienceGroups } from '../lib/experience';
+
+const groups = await Promise.all(
+	(await getExperienceGroups()).map(async group => ({
+		...group,
+		roles: await Promise.all(group.roles.map(async role => ({ ...role.entry.data, ...role, Content: (await render(role.entry)).Content }))),
+	})),
+);
 ---
-<ol class="experience-list">{items.map(({ role, company, location, period, Content }) => <li><p class="experience-period">{period}</p><div><h3>{role}</h3><p class="experience-org">{company}{location && <span> · {location}</span>}</p><div class="experience-body"><Content /></div></div></li>)}</ol>
+<ol class="experience-list">
+	{groups.map(group => group.roles.length === 1 ? (() => {
+		const [role] = group.roles;
+		const { Content } = role;
+		return (
+			<li>
+				<p class="experience-period">{group.period}</p>
+				<div>
+					<h3>{role.role}</h3>
+					<p class="experience-org">{group.company}{group.location && <span> · {group.location}</span>}</p>
+					<div class="experience-body"><Content /></div>
+				</div>
+			</li>
+		);
+	})() : (
+		<li>
+			<p class="experience-period">{group.period}</p>
+			<div>
+				<h3>{group.company}</h3>
+				<p class="experience-org">{group.roles.length} roles{group.location && <span> · {group.location}</span>}</p>
+				<ol class="experience-roles">
+					{group.roles.map(({ role, period, location, Content }) => (
+						<li>
+							<h4>{role}</h4>
+							<p class="experience-role-meta">{period}{location && <span> · {location}</span>}</p>
+							<div class="experience-body"><Content /></div>
+						</li>
+					))}
+				</ol>
+			</div>
+		</li>
+	))}
+</ol>

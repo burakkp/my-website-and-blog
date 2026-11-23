@@ -68,6 +68,13 @@ h3 { font-size: 1.55rem; margin: .6rem 0 .8rem; }
 .experience-list h3 { font-size: 1.35rem; margin: 0 0 .3rem; }
 .experience-org { color: var(--muted); margin: 0; }
 .experience-body { color: var(--muted); max-width: 680px; }
+.experience-roles { list-style: none; margin: 1.25rem 0 0; padding: 0; }
+.experience-roles > li { position: relative; padding: 0 0 1.5rem 1.75rem; }
+.experience-roles > li:last-child { padding-bottom: 0; }
+.experience-roles > li::before { content: ""; position: absolute; left: 0; top: .55rem; width: .6rem; height: .6rem; border-radius: 50%; background: var(--accent); }
+.experience-roles > li:not(:last-child)::after { content: ""; position: absolute; left: calc(.3rem - 1px); top: 1.35rem; bottom: -.2rem; width: 2px; background: var(--line); }
+.experience-roles h4 { font-size: 1.1rem; font-weight: 650; letter-spacing: -.02em; margin: 0; }
+.experience-role-meta { color: var(--accent); font: .8125rem/1.8 ui-monospace, monospace; margin: 0; }
 .repo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
 .repo-card { border: 1px solid var(--line); border-radius: 6px; padding: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
 .repo-name { font: 600 1.05rem ui-monospace, monospace; overflow-wrap: anywhere; }
